@@ -1,11 +1,12 @@
 ﻿using Core.Extensions;
 using Core.Validation;
 using FluentValidation;
+using Products.Api.Model.Models;
 using Products.Api.Services.Interfaces;
 using Products.Api.Services.Models;
-using Products.Domain.Services.Models;
+using Products.Domain.Model.Models;
+using Products.Domain.Services.Interfaces;
 using Products.Repositories.Interfaces;
-using System.Collections;
 
 namespace Products.Api.Services
 {
@@ -13,19 +14,27 @@ namespace Products.Api.Services
     {
         private readonly IProductRepositories _productRepositories;
         private readonly IModelValidatorResolver _validatorResolver;
+        private readonly IProductDomainServices _productDomainServices;
 
         public ProductServices(
             IProductRepositories productRepositories,
-            IModelValidatorResolver validatorResolver
+            IModelValidatorResolver validatorResolver,
+            IProductDomainServices productDomainServices
             )
         {
             _productRepositories = productRepositories ?? throw new ArgumentNullException(nameof(productRepositories));
             _validatorResolver = validatorResolver ?? throw new ArgumentNullException(nameof(validatorResolver));
+            _productDomainServices = productDomainServices ?? throw new ArgumentNullException(nameof(productDomainServices));
         }
 
         public async Task<IEnumerable<ProductModel>> ListAsync()
         {
             return await _productRepositories.GetAsync();
+        }
+
+        public async Task<IEnumerable<KardexDto>> GetCardexAsync()
+        {
+            return await _productDomainServices.GetKardexProductAsync();
         }
 
         public async Task<ProductModel> RegisterAsync(ProductCreatableDto creatableDto)
@@ -50,16 +59,27 @@ namespace Products.Api.Services
 
             model.ValidateExistOrThrow(id);
 
-            model.Name = updatableDto.Name;
-            model.LotNumber = updatableDto.LotNumber;
-            model.SalePrice = updatableDto.SalePrice;    
-            model.Cost = updatableDto.Cost;
+
+            if (!string.IsNullOrEmpty(updatableDto.Name))
+                model.Name = updatableDto.Name;
+
+            if (updatableDto.LotNumber != null)
+                model.LotNumber = updatableDto.LotNumber.Value;
+
+            if (updatableDto.SalePrice.HasValue)
+                model.SalePrice = updatableDto.SalePrice.Value;
+
+            if (updatableDto.Cost.HasValue)
+            {
+                model.Cost = updatableDto.Cost.Value;
+                model.SalePrice = updatableDto.Cost.Value * 1.35m;
+            }
 
             _productRepositories.Update(model);
 
             return model;
         }
-      
+
         private ProductModel BuildProductModel(ProductCreatableDto creatableDto)
         {
             return new ProductModel

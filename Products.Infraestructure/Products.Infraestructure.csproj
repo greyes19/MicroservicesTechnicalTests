@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\Products.Domain.Services\Products.Domain.Services.csproj" />
+    <ProjectReference Include="..\Products.Domain.Model\Products.Domain.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>

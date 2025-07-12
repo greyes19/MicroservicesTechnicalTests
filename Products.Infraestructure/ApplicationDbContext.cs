@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Products.Domain.Services.Models;
+using Products.Domain.Model.Models;
 
 namespace Products.Infraestructure
 {

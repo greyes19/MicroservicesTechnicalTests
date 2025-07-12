@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using Products.Api.Services;
 using Products.Api.Services.Interfaces;
 using Products.Api.Services.Models;
+using Products.Domain.Services;
+using Products.Domain.Services.Interfaces;
 using Products.Infraestructure;
 using Products.Repositories;
 using Products.Repositories.Interfaces;
@@ -37,8 +39,7 @@ builder.Services.AddSingleton<IModelValidatorResolver, ModelValidatorResolver>()
 
 builder.Services.AddScoped<IProductRepositories, ProductRepositories>();
 builder.Services.AddScoped<IProductServices, ProductServices>();
-
-
+builder.Services.AddScoped<IProductDomainServices, ProductDomainServices>();
 
 var jwtConfig = builder.Configuration.GetSection("Jwt");
 
@@ -56,6 +57,13 @@ builder.Services.AddAuthentication("Bearer")
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]))
         };
     });
+
+builder.Services.AddHttpClient<IMovementHttpService, MovementHttpService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:47688/"); // URL de Movement.Api
+});
+
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

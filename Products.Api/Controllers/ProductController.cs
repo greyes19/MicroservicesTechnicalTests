@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Products.Api.Model.Models;
 using Products.Api.Services.Interfaces;
 using Products.Api.Services.Models;
-using Products.Domain.Services.Models;
+using Products.Domain.Model.Models;
 
 namespace Products.Api.Controllers
 {
@@ -39,6 +40,13 @@ namespace Products.Api.Controllers
             var model = await _productServices.UpdateAsync(id, productUpdatableDto);
 
             return Ok(model);
+        }
+
+        [HttpGet("GetKardex")]
+        public async Task<ActionResult<List<KardexDto>>> GetKardex()
+        {
+            var products = await _productServices.GetCardexAsync();
+            return Ok(products);
         }
     }
 }

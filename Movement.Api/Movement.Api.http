@@ -1,0 +1,6 @@
+@Movement.Api_HostAddress = http://localhost:5122
+
+GET {{Movement.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

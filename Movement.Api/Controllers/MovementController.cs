@@ -42,5 +42,17 @@ namespace Movement.Api.Controllers
             return Ok(models);
         }
 
+        /// <summary>
+        /// Get movement by product.
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        [HttpGet("kardex/{productId}/movements")]
+        public async Task<ActionResult<IEnumerable<MovementsDto>>> GetMovements(Guid productId)
+        {
+            var models = await _movementServices.GetMovementsAsync(productId);
+
+            return Ok(models);
+        }
     }
 }

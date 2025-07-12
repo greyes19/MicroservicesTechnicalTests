@@ -41,5 +41,12 @@ namespace Movement.Api.Services
 
             return movements;
         }
+
+        public async Task<IEnumerable<MovementsDto>> GetMovementsAsync(Guid productId)
+        {
+            productId.ValidateArgumentOrThrow(nameof(productId));
+
+            return await _movementRepositories.GetMovementsAsync(productId);
+        }
     }
 }

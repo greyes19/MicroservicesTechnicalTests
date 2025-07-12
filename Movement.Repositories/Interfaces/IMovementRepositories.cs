@@ -6,6 +6,7 @@ namespace Movement.Repositories.Interfaces
 {
     public interface IMovementRepositories : IEntityFrameworkGenericRepository<MovementHeaderModel, Guid>
     {
+        Task<IEnumerable<MovementsDto>> GetMovementsAsync(Guid productId);
         Task<IEnumerable<KardexProductDto>> GetSummaryMovementsAsync();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Core.EntityFrameworkCore;
+using Core.Extensions;
 using Core.Validation;
 using Microsoft.EntityFrameworkCore;
 using Movement.Api.Model.Models;
@@ -34,6 +35,24 @@ namespace Movement.Repositories
                         };            
 
             return await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<MovementsDto>> GetMovementsAsync(Guid productId)
+        {
+            productId.ValidateArgumentOrThrow(nameof(productId));
+
+            var query = from m in _context.MovementHeaders
+                        join d in _context.MovementDetails on m.Id equals d.MovementHeaderId
+                        where d.ProductId == productId
+                        select new MovementsDto
+                        {
+                            Id = m.Id,
+                            Date = m.CreateDatetime,
+                            MovementType = MovementType.MovementIn == m.MovementType ? "Ingreso" : "Salida",
+                            Quantity = d.Quantity,
+                        };
+
+           return await query.OrderBy(x=>x.Id).ToListAsync();
         }
     }
 }

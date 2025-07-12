@@ -21,7 +21,7 @@ namespace Products.Api.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductModel>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
         {
             var products = await _productServices.ListAsync();
             return Ok(products);

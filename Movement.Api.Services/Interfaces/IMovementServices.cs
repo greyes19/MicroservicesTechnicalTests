@@ -7,5 +7,6 @@ namespace Movement.Api.Services.Interfaces
     {
         Task<MovementHeaderModel> CreateMovementAsync(MovementCreatableDto dto);
         Task<IEnumerable<KardexProductDto>> GetSummaryMovementsAsync();
+        Task<IEnumerable<MovementsDto>> GetMovementsAsync(Guid productId);
     }
 }

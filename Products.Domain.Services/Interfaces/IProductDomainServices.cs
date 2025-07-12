@@ -5,5 +5,6 @@ namespace Products.Domain.Services.Interfaces
     public interface IProductDomainServices
     {
         Task<List<KardexDto>> GetKardexProductAsync();
+        Task<IEnumerable<ProductDto>> ListAsync();
     }
 }

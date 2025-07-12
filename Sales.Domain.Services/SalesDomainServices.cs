@@ -9,9 +9,11 @@ namespace Sales.Domain.Services
     public class SalesDomainServices : ISalesDomainServices
     {
         private readonly ISalesRepositories _salesRepositories;
-        public SalesDomainServices(ISalesRepositories salesRepositories)
+        private readonly IMovementHttpService _movementHttpService;
+        public SalesDomainServices(ISalesRepositories salesRepositories, IMovementHttpService movementHttpService)
         {
             _salesRepositories = salesRepositories ?? throw new ArgumentNullException(nameof(salesRepositories));
+            _movementHttpService = movementHttpService ?? throw new ArgumentNullException(nameof(movementHttpService));
         }
 
         public async Task<SalesHeaderModel> CreateSalesAsync(SalesCreatableDto dto)
@@ -44,6 +46,8 @@ namespace Sales.Domain.Services
                 SalesDetails = details
             };
 
+            var model = await _salesRepositories.InsertAsync(purchaseHeader);
+
             SalesMovementCreatableDto movement = new SalesMovementCreatableDto
             {
                 OriginDocumentId = purchaseHeader.Id,
@@ -54,8 +58,9 @@ namespace Sales.Domain.Services
                     Quantity = d.Quantity
                 }).ToList()
             };
+            await _movementHttpService.RegisterMovementAsync(movement);
 
-            return await _salesRepositories.InsertAsync(purchaseHeader);
+            return model;
         }
     }
 }

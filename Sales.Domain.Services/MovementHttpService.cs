@@ -32,5 +32,6 @@ namespace Sales.Domain.Services
             var response = await _httpClient.PostAsJsonAsync("api/Movement", dto);
             response.EnsureSuccessStatusCode();
         }
+
     }
 }

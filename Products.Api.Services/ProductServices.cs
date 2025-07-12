@@ -27,9 +27,9 @@ namespace Products.Api.Services
             _productDomainServices = productDomainServices ?? throw new ArgumentNullException(nameof(productDomainServices));
         }
 
-        public async Task<IEnumerable<ProductModel>> ListAsync()
+        public async Task<IEnumerable<ProductDto>> ListAsync()
         {
-            return await _productRepositories.GetAsync();
+            return await _productDomainServices.ListAsync();
         }
 
         public async Task<IEnumerable<KardexDto>> GetCardexAsync()
@@ -88,7 +88,7 @@ namespace Products.Api.Services
                 Cost = creatableDto.Cost,
                 LotNumber = creatableDto.LotNumber,
                 Name = creatableDto.Name,
-                SalePrice = creatableDto.SalePrice,
+                SalePrice = creatableDto.SalePrice ??creatableDto.Cost * 1.35m,
                 CreateDatetime = DateTime.UtcNow
             };
         }

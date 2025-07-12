@@ -15,6 +15,12 @@ namespace Products.Domain.Services
             _movementHttpService = movementHttpService ?? throw new ArgumentNullException(nameof(movementHttpService));
         }
 
+        public async Task<IEnumerable<ProductDto>> ListAsync()
+        {
+            List<MovementSummaryProductDto> movements = await _movementHttpService.GetSummaryAsync();
+
+            return await _productRepositories.GetAsync(movements);
+        }
         public async Task<List<KardexDto>> GetKardexProductAsync()
         {
             List<MovementSummaryProductDto> movements =  await _movementHttpService.GetSummaryAsync();

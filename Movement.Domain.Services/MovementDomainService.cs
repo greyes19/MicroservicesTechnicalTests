@@ -18,10 +18,10 @@ namespace Movement.Domain.Services
         {
             dto.ValidateArgumentOrThrow(nameof(dto));
 
-            if(dto.MovementType == MovementType.MovementOut)
-            {
+            //if(dto.MovementType == MovementType.MovementOut)
+            //{
 
-            }
+            //}
 
             var details  = dto.Details.Select( d=> new MovementDetailModel
             {

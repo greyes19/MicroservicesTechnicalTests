@@ -17,13 +17,11 @@ namespace Products.Repositories
 
         public async Task<IEnumerable<ProductDto>> GetAsync(List<MovementSummaryProductDto> movements)
         {
-            var productIds = movements.Select(m => m.ProductId).Distinct().ToList();
-            var products = await _context.Products
-                .Where(p => productIds.Contains(p.Id))
-                .ToListAsync();
+            var productIds = movements.Select(m => m.ProductId).Distinct().ToList();//Se traen los movimientos del microservicios Movements
+            var products = await _context.Products.ToListAsync();
 
-            var query = from m in movements
-                        join pr in products on m.ProductId equals pr.Id
+            var query = from  pr in products
+                        join m in movements on pr.Id equals m.ProductId
                         group new { m, pr } by m.ProductId into g
                         select new ProductDto
                         {
@@ -41,13 +39,11 @@ namespace Products.Repositories
 
         public async Task<List<KardexDto>> GetCardexAsync(List<MovementSummaryProductDto> movements)
         {
-            var productIds = movements.Select(m => m.ProductId).Distinct().ToList();
-            var products = await _context.Products
-                .Where(p => productIds.Contains(p.Id))
-                .ToListAsync();
+            var productIds = movements.Select(m => m.ProductId).Distinct().ToList();//Se traen los movimientos del microservicios Movements
+            var products = await _context.Products.ToListAsync();
 
-            var query = from m in movements
-                        join pr in products on m.ProductId equals pr.Id
+            var query = from pr in products
+                        join m in movements on pr.Id equals m.ProductId
                         group new { m, pr } by m.ProductId into g
                         select new KardexDto
                         {

@@ -21,7 +21,8 @@ namespace Products.Repositories
             var products = await _context.Products.ToListAsync();
 
             var query = from  pr in products
-                        join m in movements on pr.Id equals m.ProductId
+                        join m in movements on pr.Id equals m.ProductId into joinedMovements
+                        from m in joinedMovements.DefaultIfEmpty()
                         group new { m, pr } by m.ProductId into g
                         select new ProductDto
                         {
@@ -43,7 +44,8 @@ namespace Products.Repositories
             var products = await _context.Products.ToListAsync();
 
             var query = from pr in products
-                        join m in movements on pr.Id equals m.ProductId
+                        join m in movements on pr.Id equals m.ProductId into joinedMovements
+                        from m in joinedMovements.DefaultIfEmpty()
                         group new { m, pr } by m.ProductId into g
                         select new KardexDto
                         {
